@@ -11,13 +11,13 @@ model = joblib.load(os.path.join(BASE_DIR, "demand_model.pkl"))
 training_columns = joblib.load(os.path.join(BASE_DIR, "feature_columns.pkl"))
 
 # Product and external signals
-product = "Fan"
-temperature = 32
+product = "BedBathTable"
+temperature = 26
 rain = 0
 festival = 0
 
 # Cities we want to compare
-cities = ["Chennai", "Salem", "Namakkal", "Trichy"]
+cities = ["Sao Paulo", "Rio de Janeiro", "Belo Horizonte", "Curitiba", "Porto Alegre"]
 
 
 def predict_city_demand(city):
@@ -42,7 +42,7 @@ def predict_city_demand(city):
     prediction = model.predict(df)[0]
 
     # convert numpy float to normal rounded number
-    prediction = round(float(prediction), 2)
+    prediction = max(0.0, round(float(prediction), 2))
 
     return prediction
 
@@ -62,8 +62,8 @@ for city, demand in city_predictions.items():
 
 # Define regional grouping
 regions = {
-    "Salem_region": ["Salem", "Namakkal"],
-    "Chennai_region": ["Chennai", "Trichy"]
+    "Southeast_Region": ["Sao Paulo", "Rio de Janeiro", "Belo Horizonte"],
+    "South_Region": ["Curitiba", "Porto Alegre"]
 }
 
 # Calculate regional demand

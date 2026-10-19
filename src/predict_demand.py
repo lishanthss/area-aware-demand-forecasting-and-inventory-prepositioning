@@ -22,11 +22,13 @@ model_q90 = joblib.load(os.path.join(BASE_DIR, "demand_model_q90.pkl"))
 
 # Example future input
 new_input = {
-    "rain": 1,
-    "temperature": 32,
+    "month": 11,
+    "day_of_week": 4,
+    "rain": 0,
+    "temperature": 28,
     "is_festival": 1,
-    "city_Trichy": 1,
-    "product_Fan": 1
+    "city_Sao Paulo": 1,
+    "product_Computers": 1
 }
 
 input_df = pd.DataFrame([new_input])
@@ -41,17 +43,17 @@ input_df = input_df[training_columns]
 
 # Predict
 # Use quantile models for uncertainty
-low = model_q10.predict(input_df)[0]
-mid = model_q50.predict(input_df)[0]
-high = model_q90.predict(input_df)[0]
+low = max(0.0, float(model_q10.predict(input_df)[0]))
+mid = max(0.0, float(model_q50.predict(input_df)[0]))
+high = max(0.0, float(model_q90.predict(input_df)[0]))
 
-print(f"📦 Demand forecast: {round(mid)} units")
-print(f"📊 Uncertainty range: {round(low)} – {round(high)} units (90% CI)")
+print(f"[Forecast] Demand forecast: {round(mid, 1)} units")
+print(f"[Uncertainty] Range: {round(low, 1)} - {round(high, 1)} units (90% CI)")
 
 
 # Inventory decision
-THRESHOLD = 150
+THRESHOLD = 5
 if high > THRESHOLD:
-    print("🚚 Action: Pre-stock product in nearby godown")
+    print("Action: Pre-stock product in regional fulfillment center")
 else:
-    print("🏬 Action: Keep stock in central warehouse")
+    print("Action: Keep stock in central warehouse")

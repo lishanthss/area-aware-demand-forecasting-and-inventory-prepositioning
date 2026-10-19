@@ -1,6 +1,6 @@
 import random
 
-regions = ["Salem_region", "Chennai_region"]
+regions = ["Southeast_Region", "South_Region"]
 
 stockouts_without = 0
 stockouts_with = 0
@@ -10,13 +10,14 @@ simulations = 1000
 for _ in range(simulations):
 
     initial_stock = {
-        "Salem_region": random.randint(50, 150),
-        "Chennai_region": random.randint(50, 150)
+        "Southeast_Region": random.randint(15, 35),
+        "South_Region": random.randint(15, 35)
     }
 
+    # Demand with stochastic volatility (Southeast metro demand vs South region demand)
     demand = {
-        "Salem_region": random.uniform(110,140),
-        "Chennai_region": random.uniform(40,70)
+        "Southeast_Region": random.uniform(20, 35),
+        "South_Region": random.uniform(5, 18)
     }
 
     # scenario 1: without system
@@ -25,22 +26,22 @@ for _ in range(simulations):
             stockouts_without += 1
 
     # scenario 2: dynamic transfer logic
-    salem_diff = demand["Salem_region"] - initial_stock["Salem_region"]
-    chennai_diff = demand["Chennai_region"] - initial_stock["Chennai_region"]
+    southeast_diff = demand["Southeast_Region"] - initial_stock["Southeast_Region"]
+    south_diff = demand["South_Region"] - initial_stock["South_Region"]
 
     new_stock = {
-        "Salem_region": initial_stock["Salem_region"],
-        "Chennai_region": initial_stock["Chennai_region"]
+        "Southeast_Region": initial_stock["Southeast_Region"],
+        "South_Region": initial_stock["South_Region"]
     }
 
-    if salem_diff > 0 and chennai_diff < 0:
-        transfer = min(salem_diff, abs(chennai_diff))
-        new_stock["Salem_region"] += transfer
-        new_stock["Chennai_region"] -= transfer
-    elif chennai_diff > 0 and salem_diff < 0:
-        transfer = min(chennai_diff, abs(salem_diff))
-        new_stock["Chennai_region"] += transfer
-        new_stock["Salem_region"] -= transfer
+    if southeast_diff > 0 and south_diff < 0:
+        transfer = min(southeast_diff, abs(south_diff))
+        new_stock["Southeast_Region"] += transfer
+        new_stock["South_Region"] -= transfer
+    elif south_diff > 0 and southeast_diff < 0:
+        transfer = min(south_diff, abs(southeast_diff))
+        new_stock["South_Region"] += transfer
+        new_stock["Southeast_Region"] -= transfer
 
     for r in regions:
         if demand[r] > new_stock[r]:

@@ -2,10 +2,11 @@ import pandas as pd
 
 # Example predicted demand
 city_demand = {
-    "Chennai": 40,
-    "Salem": 120,
-    "Trichy": 60,
-    "Namakkal": 110
+    "Sao Paulo": 25,
+    "Rio de Janeiro": 12,
+    "Belo Horizonte": 5,
+    "Curitiba": 4,
+    "Porto Alegre": 3
 }
 
 df = pd.DataFrame(list(city_demand.items()), columns=["city", "predicted_demand"])
